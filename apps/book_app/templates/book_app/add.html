@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+
+  <body>
+    <h2>Add a New Book Tittle and a Review</h2>
+    <form action="{% url 'book:add_book' %}" method="post">
+      {% csrf_token %}
+      Book Title: <input type="text" name="title"><p></p>
+      {% if messages %}
+        {% for message in messages %}
+          {% if 'title' in message.tags %}
+              <p>{{message}}</p>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+
+      Author:<p></p>
+      Choose from the list:
+        <select name="existing_author">
+          <option value=""></option>
+        {% for author in authors %}
+          <option >{{author.name}}</option>
+        {% endfor %}
+        </select><p></p>
+        {% if messages %}
+          {% for message in messages %}
+            {% if 'author' in message.tags %}
+                <p>{{message}}</p>
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+      or add a new author: <input type="text" name="new_author"><p></p>
+
+      Review: <textarea name="review" rows="8" cols="80"></textarea>
+      {% if messages %}
+        {% for message in messages %}
+          {% if 'review' in message.tags %}
+              <p>{{message}}</p>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+
+    <label>Rating:
+      <select name="rating">
+        <option></option>
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+        <option>5</option>
+      </select> stars<p></p>
+      {% if messages %}
+        {% for message in messages %}
+          {% if 'rating' in message.tags %}
+              <p>{{message}}</p>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+      <input type="submit" value="Add Book and Review">
+    </form>
+  </body>
+
+</html>

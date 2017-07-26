@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <style media="screen">
+      span{
+        color: grey;
+      }
+      section{
+        display: inline-block;
+        width: 60%;
+        margin-right: 20px;
+      }
+      aside{
+        display: inline-block;
+        width: 34%;
+        margin-right: 10px;
+      }
+      h5{
+        color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Welcome {{user.first_name}}</h2>
+    <p><a href="{% url 'book:log_out' %}">Log Out</a> <a href="{% url 'book:home' %}">Home</a></p>
+    <h3>{{book.title}}</h3>
+    <h4>Author: {{book.author.name}}</h4>
+    <section>
+      <h3>Reviews:</h3>
+      {% for review in book.book_reviews.all %}
+        {% if review.user == user %}
+          <p>{{review.rating}}  - {{review.rating_int}}</p>
+          <p><strong><a href="{% url 'book:view_user' user_id=review.user.id %}">{{review.user.first_name}}</a></strong> says: {{review.review}}</p>
+          <h5>{{review.created_at}}</h5>
+          <p><a href="{% url 'book:delete_review' review_id=review.id book_id=book.id %}">Delete Review</a></p>
+        {% else %}
+          <p>{{review.rating}}  - {{review.rating_int}}</p>
+          <p><strong><a href="{% url 'book:view_user' user_id=review.user.id %}">{{review.user.first_name}}</a></strong> says: {{review.review}}</p>
+          <h5>{{review.created_at}}</h5>
+        {% endif %}
+      {% endfor %}
+    </section>
+
+    <aside>
+      <p>Add a Review:</p>
+      <form action="{% url 'book:add_review' book_id=book.id %}" method="post">
+           {%csrf_token%}
+        <textarea name="review" rows="8" cols="80"></textarea>
+        <label>Rating:
+          <select name="rating">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+          </select> stars<p></p>
+          <input type="submit" value="Submit Review">
+          {% if messages %}
+            {% for message in messages %}
+                  <p>{{message}}</p>
+            {% endfor %}
+          {% endif %}
+      </form>
+
+    </aside>
+  </body>
+</html>
